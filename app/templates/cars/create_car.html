@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cars</title>
+  </head>
+
+  <body>
+    <form action="" method="POST">
+      <label>Brand:</label> <input name="brand"> <br>
+      <label>Model:</label> <input name="model"> <br>
+      <label>Price:</label> <input name="price"> <br><br>
+      <input type="submit" value="Save">
+    </form>
+    
+    <form action='{{ url_for("cars.get_cars", _external=True) }}'>
+        <input type="submit" value="Back to list of cars">
+    </form>
+  </body>
+</html>

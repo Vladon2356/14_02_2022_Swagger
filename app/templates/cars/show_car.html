@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ car.model }}</title>
+  </head>
+
+  <body>
+    <form action='{{ url_for("cars.update_car", _external=True, id=car.id) }}' method="post">
+      <label>Brand:</label> <input name="brand" value="{{ car.brand }}"> <br>
+      <label>Model:</label> <input name="model" value="{{ car.model }}"> <br>
+      <label>Price:</label> <input name="price" value="{{ car.price }}"> <br>
+      <input type="submit" value="Save">
+    </form>
+
+    <form action='{{ url_for("cars.get_cars", _external=True) }}'>
+        <input type="submit" value="Back to list of users">
+    </form>
+  </body>
+</html>

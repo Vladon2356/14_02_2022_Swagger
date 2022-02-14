@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cars</title>
+  </head>
+
+  <body>
+    <table>
+        <tr>
+          <th>Model</th>
+          <th>View</th>
+          <th>Delete</th>
+        </tr>
+        {% for car in cars %}
+          <tr>
+            <td>{{ car.model }}</td>
+            <td>
+              <form action='{{ url_for("cars.get_car", _external=True, id=car.id) }}'>
+                  <input type="submit" value="View">
+              </form>
+            </td> 
+            <td>
+              <form action='{{ url_for("cars.delete_car", _external=True, id=car.id) }}'>
+                  <input type="submit" value="Delete">
+              </form>
+            </td> 
+            
+        {% endfor %}
+    </table>
+    
+    <br>
+    <form action='{{ url_for("cars.create_car", _external=True) }}' method="get">
+        <input type="submit" value="Create new car">
+    </form>
+  </body>
+</html>

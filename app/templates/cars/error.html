@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Error</title>
+  </head>
+
+  <body>
+    <table>
+        <div>
+          <h1>Error:</h1>
+          {{ message }}
+        </div>
+              
+        <form action='{{ url_for("cars.get_cars", _external=True) }}'>
+            <input type="submit" value="Back to list of cars">
+        </form>
+      
+  </body>
+</html>
