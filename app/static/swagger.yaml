@@ -1,0 +1,145 @@
+openapi: 3.0.0
+servers:
+  - url: http://127.0.0.1:5000
+tags:
+  - name: Cars
+paths:
+  /cars:
+    get:
+      tags:
+        - cars
+      summary: Get list of cars
+      responses:
+        '200': 
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/carsOut'
+
+    post:
+      tags:
+        - cars
+      summary: Create new car
+      requestBody:
+        required: true
+        description: New car info
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/carInput'
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Data not valied
+          content:
+            application/json:
+              example:
+                message: Please, specify "model" and "brand" and "price".
+  /cars/{id}:
+    get:
+      tags:
+        - cars
+      parameters:
+        - name: id
+          in: path
+          description: id of the car
+          required: true
+      summary: Get one car by id
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: '/components/schemas/carOut'
+        '404':
+          description: car Not Found
+          content:
+            application/json:
+              example:
+                message: car not found.
+    patch:
+      tags:
+        - cars
+      summary: Updates car's info
+      parameters:
+        - name: id
+          in: path
+          description: id of the car
+          required: true
+      requestBody:
+        required: true
+        description: car's updated info
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/carInput'
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              example:
+                message: Updated.
+        '404':
+          description: car Not Found
+          content:
+            application/json:
+              example:
+                message: car not found.
+    delete:
+      tags:
+        - cars
+      summary: Remove car by id
+      parameters:
+        - name: id
+          in: path
+          description: id of the car
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              example:
+                message: Deleted.
+        '404':
+          description: car Not Found
+          content:
+            application/json:
+              example:
+                message: car not found.
+components:
+  schemas:
+    carInput:
+      type: object
+      properties:
+        brand:
+          type: string
+          example: Porche
+        model:
+          type: string
+          example: 911
+        price:
+          type: integer
+          example: 35000
+    carOut:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        brand:
+          type: string
+          example: Porche
+        model:
+          type: string
+          example: 911
+        price:
+          type: integer
+          example: 35000
+    carsOut:
+      type: array
+      items:
+        $ref: '#/components/schemas/carOut'
