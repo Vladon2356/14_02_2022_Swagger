@@ -1,4 +1,4 @@
-from flask import render_template, redirect, request, Blueprint, url_for
+from flask import render_template, redirect, request, Blueprint, url_for, jsonify
 
 cars_bp = Blueprint('cars', __name__)
 cars = [
@@ -34,9 +34,9 @@ def get_cars():
     if request.args.get("name"):
         name_bit = request.args["name"]
         cars_ = [car for car in cars if name_bit in cars["name"].lower()]
-        return render_template("carscars/list_cars.html", cars=cars_)
+        return jsonify(cars_)
 
-    return render_template("cars/list_cars.html", cars=cars)
+    return jsonify(cars)
 
 
 @cars_bp.route("/cars/<int:id>", methods=["GET"])
@@ -46,24 +46,21 @@ def get_car(id):
         if car['id'] == id:
             result = car
     if not result:
-        return render_template("cars/error.html", message="Car not found.")
+        return jsonify({"message": "Car not found."}), 404
 
-    return render_template("cars/show_car.html", car=result)
+    return jsonify(result)
 
 
-@cars_bp.route("/cars/create", methods=["GET", "POST"])
+@cars_bp.route("/cars", methods=["GET", "POST"])
 def create_car():
-    if request.method == "GET":
-        return render_template("cars/create_car.html")
+    if not request.json:
+        return jsonify({"message": 'Please, specify "brand" and "model" and "price".'}), 400
 
-    if not request.form:
-        return render_template("cars/error.html", message='Data not valied')
-
-    brand = request.form.get("brand")
-    model = request.form.get("model")
-    price  = request.form.get("price")
+    brand = request.json.get("brand")
+    model = request.json.get("model")
+    price  = request.json.get("price")
     if not brand or not model or not price:
-        return render_template("cars/error.html", message='Data not valied')
+        return jsonify({"message": 'Please, specify "brand" and "model" and "price".'}), 400
 
     id = len(cars) + 1
     cars.append(
@@ -74,17 +71,17 @@ def create_car():
             "id": id
         }
     )
-    return redirect(url_for('cars.get_cars'))
+    return jsonify({'id':id})
 
 
-@cars_bp.route("/cars/<int:id>/update", methods=["POST"])
+@cars_bp.route("/cars/<int:id>", methods=["PATCH"])
 def update_car(id):
-    brand = request.form.get("brand")
-    model = request.form.get("model")
-    price = request.form.get("price")
+    brand = request.json.get("brand")
+    model = request.json.get("model")
+    price = request.json.get("price")
 
     if not brand or not model or not price:
-        return render_template("cars/error.html", message='Data not valied')
+        return jsonify({'message': 'Data not valied'})
 
     result = False
     for car in cars:
@@ -92,15 +89,15 @@ def update_car(id):
             result = car
 
     if not result:
-        return render_template("cars/error.html", message="Car not found.")
+        return jsonify({"message": "Car not found."}), 404
 
     result["brand"] = brand
     result["model"] = model
     result["price"] = price
-    return redirect(url_for('cars.get_cars'))
+    return jsonify({"message": "Updated"})
 
 
-@cars_bp.route("/cars/<int:id>/delete", methods=["GET", "POST"])
+@cars_bp.route("/cars/<int:id>", methods=["DELETE"])
 def delete_car(id):
     result = False
     for car in cars:
@@ -109,7 +106,7 @@ def delete_car(id):
 
 
     if not result:
-        return render_template("cars/error.html", message="Car not found.")
+        return jsonify({"message": "Car not found."}), 404
 
     cars.remove(result)
-    return redirect(url_for('cars.get_cars'))
+    return jsonify({"message": "Car deleted"})

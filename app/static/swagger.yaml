@@ -10,7 +10,7 @@ paths:
         - cars
       summary: Get list of cars
       responses:
-        '200': 
+        '200':
           description: Successful
           content:
             application/json:
